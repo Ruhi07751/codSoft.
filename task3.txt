@@ -1,0 +1,60 @@
+﻿import random
+import string
+import tkinter as tk
+from tkinter import messagebox
+
+def generate_password():
+    try:
+        length = int(entry_length.get())
+        if length < 1:
+            raise ValueError("Password length must be at least 1.")
+        
+        chars = ""
+        if var_uppercase.get():
+            chars += string.ascii_uppercase
+        if var_lowercase.get():
+            chars += string.ascii_lowercase
+        if var_digits.get():
+            chars += string.digits
+        if var_special.get():
+            chars += string.punctuation
+
+        if not chars:
+            raise ValueError("Select at least one character set for password generation.")
+
+        password = ''.join(random.choice(chars) for _ in range(length))
+        entry_password.delete(0, tk.END)
+        entry_password.insert(0, password)
+    except ValueError as e:
+        messagebox.showerror("Invalid input", str(e))
+
+# Create main window
+root = tk.Tk()
+root.title("Password Generator")
+
+# Create input fields and labels
+tk.Label(root, text="Password Length:").grid(row=0, column=0, padx=10, pady=10)
+entry_length = tk.Entry(root)
+entry_length.grid(row=0, column=1, padx=10, pady=10)
+
+# Create checkboxes for character sets
+var_uppercase = tk.BooleanVar()
+var_lowercase = tk.BooleanVar()
+var_digits = tk.BooleanVar()
+var_special = tk.BooleanVar()
+
+tk.Checkbutton(root, text="Include Uppercase Letters", variable=var_uppercase).grid(row=1, columnspan=2, pady=5)
+tk.Checkbutton(root, text="Include Lowercase Letters", variable=var_lowercase).grid(row=2, columnspan=2, pady=5)
+tk.Checkbutton(root, text="Include Digits", variable=var_digits).grid(row=3, columnspan=2, pady=5)
+tk.Checkbutton(root, text="Include Special Characters", variable=var_special).grid(row=4, columnspan=2, pady=5)
+
+# Create button to generate password
+button_generate = tk.Button(root, text="Generate Password", command=generate_password)
+button_generate.grid(row=5, columnspan=2, pady=10)
+
+# Create entry to display the generated password
+entry_password = tk.Entry(root, width=40)
+entry_password.grid(row=6, columnspan=2, padx=10, pady=10)
+
+# Run the application
+root.mainloop()
